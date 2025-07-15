@@ -189,27 +189,8 @@ with st.container():
             location=map_center,
             zoom_start=8,
             tiles="CartoDB positron",
-            attribution_control=False  # Отключаем стандартную атрибуцию
+            attr="© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, © <a href='https://carto.com/attributions'>CARTO</a>"
         )
-
-        # Добавляем пользовательскую атрибуцию без флага
-        folium.map.CustomPane("labels").add_to(m)
-        m.get_root().html.add_child(folium.Element("""
-        <script>
-            L.Control.Attribution.prototype._update = function() {
-                if (!this._map) { return; }
-                var attribs = [];
-                for (var i in this._attributions) {
-                    if (this._attributions[i]) {
-                        attribs.push(i);
-                    }
-                }
-                var prefixAndAttribs = [];
-                prefixAndAttribs.push('© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, © <a href="https://carto.com/attributions">CARTO</a>');
-                this._container.innerHTML = prefixAndAttribs.join(' | ');
-            };
-        </script>
-        """))
 
         # Слой с пятнами
         spills_fg = folium.FeatureGroup(name="Пятна разливов").add_to(m)
@@ -289,25 +270,8 @@ with tab2:
             location=map_center,
             zoom_start=8,
             tiles="CartoDB positron",
-            attribution_control=False  # Отключаем стандартную атрибуцию
+            attr="© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, © <a href='https://carto.com/attributions'>CARTO</a>"
         )
-        # Добавляем пользовательскую атрибуцию без флага
-        m_heatmap.get_root().html.add_child(folium.Element("""
-        <script>
-            L.Control.Attribution.prototype._update = function() {
-                if (!this._map) { return; }
-                var attribs = [];
-                for (var i in this._attributions) {
-                    if (this._attributions[i]) {
-                        attribs.push(i);
-                    }
-                }
-                var prefixAndAttribs = [];
-                prefixAndAttribs.push('© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, © <a href="https://carto.com/attributions">CARTO</a>');
-                this._container.innerHTML = prefixAndAttribs.join(' | ');
-            };
-        </script>
-        """))
 
         heat_data = [[point.xy[1][0], point.xy[0][0], row['area_sq_km']] for index, row in spills_gdf.iterrows() for point in [row['geometry'].centroid]]
         HeatMap(heat_data, radius=15, blur=20, max_zoom=10).add_to(m_heatmap)
